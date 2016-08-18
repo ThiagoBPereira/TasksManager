@@ -3,8 +3,37 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasksManager.Api", "TasksManager.Api\TasksManager.Api.csproj", "{D64BEF76-0813-4788-8A41-69AF8F880B07}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Presentation", "0 - Presentation", "{8681E4F9-36A0-41DF-B77D-A3D4E7E14310}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Applicaiton", "1 - Applicaiton", "{B880D168-1B90-4DD4-91D0-E305170245FE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Domain", "2 - Domain", "{431641AD-C5C5-4030-B12E-B5E3B6730EDE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Infra", "3 - Infra", "{261BAA47-A8B7-4F54-A506-875A775EE839}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.1 - Database", "3.1 - Database", "{55DF9459-A2B0-4A54-BA96-3B2ABA616032}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.2 - CrossCutting", "3.2 - CrossCutting", "{538A3682-C14D-4D4E-8659-7FA2869DEC7B}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D64BEF76-0813-4788-8A41-69AF8F880B07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D64BEF76-0813-4788-8A41-69AF8F880B07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D64BEF76-0813-4788-8A41-69AF8F880B07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D64BEF76-0813-4788-8A41-69AF8F880B07}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D64BEF76-0813-4788-8A41-69AF8F880B07} = {8681E4F9-36A0-41DF-B77D-A3D4E7E14310}
+		{55DF9459-A2B0-4A54-BA96-3B2ABA616032} = {261BAA47-A8B7-4F54-A506-875A775EE839}
+		{538A3682-C14D-4D4E-8659-7FA2869DEC7B} = {261BAA47-A8B7-4F54-A506-875A775EE839}
 	EndGlobalSection
 EndGlobal
