@@ -28,6 +28,23 @@ namespace TasksManager.Application.Apps
             });
         }
 
+        public ValidatorResult Update(string username, string taskId, TaskViewModelDetails task)
+        {
+            return _taskService.Update(new Domain.Entities.Task
+            {
+                Id = taskId,
+                Title = task.Title,
+                Description = task.Description,
+                IsCompleted = task.IsCompleted,
+                UserName = username
+            });
+        }
+
+        public ValidatorResult Delete(string userName, string taskId)
+        {
+            return _taskService.Delete(userName, taskId);
+        }
+
 
         public IEnumerable<TaskViewModelIndex> Get(string username)
         {

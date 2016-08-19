@@ -30,6 +30,21 @@ namespace TasksManager.Domain.Services
             return task.ValidatorResult;
         }
 
+        public ValidatorResult Update(Task task)
+        {
+            if (task.IsValid())
+            {
+                return _taskRepository.Update(task);
+            }
+
+            return task.ValidatorResult;
+        }
+
+        public ValidatorResult Delete(string userName, string taskId)
+        {
+            return _taskRepository.Delete(i => i.UserName == userName && i.Id == taskId);
+        }
+
         public Task GetByUserNameAndTaskId(string userName, string taskId)
         {
             return _taskRepository.FirstOrDefault(i => i.UserName == userName && i.Id == taskId);

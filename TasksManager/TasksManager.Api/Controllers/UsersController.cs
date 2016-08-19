@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Web.Http;
 using TasksManager.Api.Authorize;
 using TasksManager.Application.Interfaces;
+using TasksManager.Application.ViewModels.Request;
 using TasksManager.Application.ViewModels.User;
+using TasksManager.Infra.Cc.Validators;
 
 namespace TasksManager.Api.Controllers
 {
@@ -40,16 +43,19 @@ namespace TasksManager.Api.Controllers
         [HttpPut]
         [Route("{userName}/ChangePassword")]
         [AuthorizeRouteByClaim("userName", ClaimTypes.Name)]
-        public IHttpActionResult Put([FromUri]string userName, [FromBody]UserChangePasswordViewModel userViewModel)
+        public IHttpActionResult Put([FromUri]UserNameRequest userRequest, [FromBody]UserChangePasswordViewModel userViewModel)
         {
             try
             {
-                userViewModel.UserName = userName.ToLower();
+                userViewModel.UserName = userRequest.UserName;
 
                 var validation = _userApp.ChangePassword(userViewModel);
 
                 if (validation.IsSuccess)
                     return Ok();
+
+                if (validation.Errors.Any(i => i.ErrorKey == ErroKeyEnum.NotFound))
+                    return NotFound();
 
                 return Content(HttpStatusCode.BadRequest, validation);
 
