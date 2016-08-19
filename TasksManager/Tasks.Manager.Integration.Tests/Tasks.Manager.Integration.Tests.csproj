@@ -81,8 +81,10 @@
   <ItemGroup>
     <Compile Include="Serializers\NewtonsoftJsonSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\TokenAndAuthorizationTest.cs" />
     <Compile Include="Tests\UsersControllerTest.cs" />
     <Compile Include="Tests\BaseWebApiIntegrationTest.cs" />
+    <Compile Include="TokenResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TasksManager.Api\TasksManager.Api.csproj">

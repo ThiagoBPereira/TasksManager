@@ -17,7 +17,7 @@ namespace TasksManager.Api.Authorize
 
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
-            if (!actionContext.RequestContext.Principal.Identity.IsAuthenticated)
+            if (actionContext.RequestContext.Principal?.Identity == null || !actionContext.RequestContext.Principal.Identity.IsAuthenticated)
             {
                 return false;
             }
@@ -36,7 +36,7 @@ namespace TasksManager.Api.Authorize
             var routeUserKey = actionContext.RequestContext.RouteData.Values.FirstOrDefault(i => i.Key == _fieldRoute);
 
             //Compare
-            return userKey.Value == (string)routeUserKey.Value;
+            return userKey.Value.ToLower().Equals(((string)routeUserKey.Value).ToLower());
         }
     }
 }

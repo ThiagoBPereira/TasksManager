@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasksManager.Api", "TasksMa
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Presentation", "0 - Presentation", "{8681E4F9-36A0-41DF-B77D-A3D4E7E14310}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Applicaiton", "1 - Applicaiton", "{B880D168-1B90-4DD4-91D0-E305170245FE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Application", "1 - Application", "{B880D168-1B90-4DD4-91D0-E305170245FE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Domain", "2 - Domain", "{431641AD-C5C5-4030-B12E-B5E3B6730EDE}"
 EndProject

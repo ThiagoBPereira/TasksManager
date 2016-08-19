@@ -4,9 +4,10 @@
     {
         InternalError,
         DuplicateKey,
-        EmailNotValid,
-        EmptyPassword,
-        SmallPassword,
-        DontMatchPassword
+        NotValid,
+        EmptyError,
+        SmallLenghtError,
+        DontMatchPassword,
+        NotFound
     }
 }
