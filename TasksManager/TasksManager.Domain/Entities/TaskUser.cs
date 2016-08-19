@@ -1,14 +1,14 @@
-﻿using System.Configuration;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using AspNet.Identity.MongoDB;
 using MongoDB.Bson.Serialization.Attributes;
-using TasksManager.Infra.Cc.Cryptographic;
+using TasksManager.Domain.ValueObjects;
 using TasksManager.Infra.Cc.Validators;
 
 namespace TasksManager.Domain.Entities
 {
     public class TaskUser : IdentityUser
     {
+
         [BsonIgnore]
         public ValidatorResult ValidatorResult { get; set; }
 
@@ -26,12 +26,32 @@ namespace TasksManager.Domain.Entities
 
             VerifyPassword();
 
+            VerifyUsername();
+
             if (ValidatorResult.IsSuccess)
             {
-                GeneratePasswordHash();
+                PasswordHash = PasswordHelper.GenerateHash(Password);
             }
 
             return ValidatorResult.IsSuccess;
+        }
+
+        private void VerifyUsername()
+        {
+            var regex = new Regex(@"[a-zA-Z-0-9]+ ", RegexOptions.IgnoreCase);
+
+            if (string.IsNullOrEmpty(UserName))
+            {
+                ValidatorResult.AddError(new ValidationError("Please enter your username", ErroKeyEnum.EmptyError));
+            }
+            else if (UserName.Length < 4)
+            {
+                ValidatorResult.AddError(new ValidationError("To be valid your username have to contain at least 4 characters", ErroKeyEnum.SmallLenghtError));
+            }
+            else if (regex.Match(Email).Success)
+            {
+                ValidatorResult.AddError(new ValidationError("To be valid your username have to contain only letters and numbers", ErroKeyEnum.NotValid));
+            }
         }
 
         private void VerifyEmail()
@@ -42,29 +62,15 @@ namespace TasksManager.Domain.Entities
 
             if (!match.Success)
             {
-                ValidatorResult.AddError(new ValidationError("Your email address is invalid. Please enter a valid address.", ErroKeyEnum.EmailNotValid));
+                ValidatorResult.AddError(new ValidationError("Your email address is invalid. Please enter a valid address.", ErroKeyEnum.NotValid));
             }
         }
 
         private void VerifyPassword()
         {
-            if (string.IsNullOrEmpty(Password))
-            {
-                ValidatorResult.AddError(new ValidationError("Please enter your password", ErroKeyEnum.EmptyPassword));
-            }
-            else if (Password.Length < 6)
-            {
-                ValidatorResult.AddError(new ValidationError("To be valid your password have to contain at least 6 characters", ErroKeyEnum.SmallPassword));
-            }
-            else if (!Password.Equals(PasswordConfirmation))
-            {
-                ValidatorResult.AddError(new ValidationError("Password and Password confirmation do not match", ErroKeyEnum.DontMatchPassword));
-            }
+            ValidatorResult.AddError(PasswordHelper.IsPasswordValid(Password, PasswordConfirmation));
         }
 
-        public void GeneratePasswordHash()
-        {
-            PasswordHash = Encrypt.GenerateSha256Hash(Password, ConfigurationManager.AppSettings["EncryptSalt"]);
-        }
+
     }
 }

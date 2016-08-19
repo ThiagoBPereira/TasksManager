@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Owin.Security.OAuth;
 using TasksManager.Application.Interfaces;
-using TasksManager.Application.ViewModels.User;
 
 namespace TasksManager.Api.Authorize
 {
@@ -27,7 +26,7 @@ namespace TasksManager.Api.Authorize
 
             try
             {
-                var user = _userApp.GetUserByEmailAndPassword(new UserViewModel { Email = context.UserName, Password = context.Password });
+                var user = _userApp.GetUserByEmailAndPassword(context.UserName, context.Password);
 
                 if (user == null)
                 {
@@ -37,6 +36,7 @@ namespace TasksManager.Api.Authorize
 
                 var identity = new ClaimsIdentity(context.Options.AuthenticationType);
 
+                identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
                 identity.AddClaim(new Claim(ClaimTypes.Email, user.Email));
                 identity.AddClaim(new Claim(ClaimTypes.Sid, user.Id));
 

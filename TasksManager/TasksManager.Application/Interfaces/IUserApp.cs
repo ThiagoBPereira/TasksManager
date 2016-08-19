@@ -5,7 +5,8 @@ namespace TasksManager.Application.Interfaces
 {
     public interface IUserApp
     {
-        ValidatorResult Create(UserViewModel userViewModel);
-        UserViewModel GetUserByEmailAndPassword(UserViewModel userViewModel);
+        ValidatorResult Create(UserViewModelCreate userViewModel);
+        UserViewModelDetails GetUserByEmailAndPassword(string email, string password);
+        ValidatorResult ChangePassword(UserChangePasswordViewModel userViewModel);
     }
 }

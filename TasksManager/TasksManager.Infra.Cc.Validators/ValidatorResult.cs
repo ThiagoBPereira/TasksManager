@@ -18,5 +18,13 @@ namespace TasksManager.Infra.Cc.Validators
         {
             Errors.Add(error);
         }
+
+        public void AddError(ValidatorResult validator)
+        {
+            foreach (var validationError in validator.Errors.Where(i => i != null))
+            {
+                AddError(validationError);
+            }
+        }
     }
 }

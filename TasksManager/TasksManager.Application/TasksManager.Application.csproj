@@ -44,7 +44,9 @@
     <Compile Include="Apps\UserApp.cs" />
     <Compile Include="Interfaces\IUserApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\User\UserChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\User\UserViewModel.cs" />
+    <Compile Include="ViewModels\User\UserViewModelCreate.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TasksManager.Domain\TasksManager.Domain.csproj">
