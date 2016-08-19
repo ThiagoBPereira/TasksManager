@@ -8,6 +8,6 @@ namespace TasksManager.Domain.Interfaces.Services
         TaskUser GetUserByEmailAndPassword(string email, string password);
         TaskUser GetUserByUserNameAndPassword(string userName, string password);
         ValidatorResult CreateAsync(TaskUser taskUser);
-        ValidatorResult ChangePassword(string id, string newPassword, string newPasswordConfirmation);
+        ValidatorResult ChangePassword(string id, string oldPassword, string newPassword, string newPasswordConfirmation);
     }
 }

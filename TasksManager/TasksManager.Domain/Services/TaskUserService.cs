@@ -40,14 +40,15 @@ namespace TasksManager.Domain.Services
             return taskUser.ValidatorResult;
         }
 
-        public ValidatorResult ChangePassword(string id, string newPassword, string newPasswordConfirmation)
+        public ValidatorResult ChangePassword(string id, string oldPassword, string newPassword, string newPasswordConfirmation)
         {
             var validation = PasswordHelper.IsPasswordValid(newPassword, newPasswordConfirmation);
             if (validation.IsSuccess)
             {
                 var passwordHash = PasswordHelper.GenerateHash(newPassword);
+                var oldPasswordHash = PasswordHelper.GenerateHash(oldPassword);
 
-                return _taskUserRepository.ChangePassword(id, passwordHash);
+                return _taskUserRepository.ChangePassword(id, oldPasswordHash, passwordHash);
             }
             return validation;
         }
