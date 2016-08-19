@@ -8,16 +8,12 @@ using TasksManager.Infra.Cc.Validators;
 namespace Tasks.Manager.Integration.Tests.Tests
 {
     [TestClass]
-
-    public class UsersControllerIntegrationTest : BaseWebApiIntegrationTest
+    public class UsersControllerIntegrationTest : BaseAuthorizedRequestsTest
     {
         [TestMethod]
         [TestCategory("Integration/User")]
         public void User_Cant_Be_Created_With_Blank_Password()
         {
-            var restCliente = new RestClient(UrlApi);
-            restCliente.AddHandler("application/json", NewtonsoftJsonSerializer.Default);
-
             var request = new RestRequest("users", Method.POST);
             var newUser = new UserViewModelCreate()
             {
@@ -27,7 +23,7 @@ namespace Tasks.Manager.Integration.Tests.Tests
 
             request.AddJsonBody(newUser);
 
-            var response = restCliente.Execute<ValidatorResult>(request);
+            var response = RestCliente.Execute<ValidatorResult>(request);
             var data = response.Data;
 
             Assert.IsFalse(data.IsSuccess);
@@ -38,9 +34,6 @@ namespace Tasks.Manager.Integration.Tests.Tests
         [TestCategory("Integration/User")]
         public void User_Cant_Be_Created_With_Password_Less_Than_6_characters()
         {
-            var restCliente = new RestClient(UrlApi);
-            restCliente.AddHandler("application/json", NewtonsoftJsonSerializer.Default);
-
             var request = new RestRequest("users", Method.POST);
             var newUser = new UserViewModelCreate
             {
@@ -50,7 +43,7 @@ namespace Tasks.Manager.Integration.Tests.Tests
 
             request.AddJsonBody(newUser);
 
-            var response = restCliente.Execute<ValidatorResult>(request);
+            var response = RestCliente.Execute<ValidatorResult>(request);
             var data = response.Data;
 
             Assert.IsFalse(data.IsSuccess);
@@ -61,9 +54,6 @@ namespace Tasks.Manager.Integration.Tests.Tests
         [TestCategory("Integration/User")]
         public void User_Cant_Be_Created_With_Invalid_Email()
         {
-            var restCliente = new RestClient(UrlApi);
-            restCliente.AddHandler("application/json", NewtonsoftJsonSerializer.Default);
-
             var request = new RestRequest("users", Method.POST);
             var newUser = new UserViewModelCreate
             {
@@ -73,7 +63,7 @@ namespace Tasks.Manager.Integration.Tests.Tests
 
             request.AddJsonBody(newUser);
 
-            var response = restCliente.Execute<ValidatorResult>(request);
+            var response = RestCliente.Execute<ValidatorResult>(request);
             var data = response.Data;
 
             Assert.IsFalse(data.IsSuccess);
@@ -84,9 +74,6 @@ namespace Tasks.Manager.Integration.Tests.Tests
         [TestCategory("Integration/User")]
         public void User_Cant_Be_Created_With_Different_Password()
         {
-            var restCliente = new RestClient(UrlApi);
-            restCliente.AddHandler("application/json", NewtonsoftJsonSerializer.Default);
-
             var request = new RestRequest("users", Method.POST);
             var newUser = new UserViewModelCreate
             {
@@ -97,7 +84,7 @@ namespace Tasks.Manager.Integration.Tests.Tests
 
             request.AddJsonBody(newUser);
 
-            var response2 = restCliente.Execute<ValidatorResult>(request);
+            var response2 = RestCliente.Execute<ValidatorResult>(request);
             var errorData = response2.Data;
 
             Assert.IsFalse(errorData.IsSuccess);
@@ -108,21 +95,19 @@ namespace Tasks.Manager.Integration.Tests.Tests
         [TestCategory("Integration/User")]
         public void User_Can_Be_Created()
         {
-            var restCliente = new RestClient(UrlApi);
-            restCliente.AddHandler("application/json", NewtonsoftJsonSerializer.Default);
-
             var request = new RestRequest("users", Method.POST);
-            var newUser = new UserViewModelCreate
+
+            User = new UserViewModelCreate
             {
-                Email = "first@teste.com",
-                Password = "123456",
-                PasswordConfirmation = "123456",
-                UserName = "first"
+                Email = "token@token.com",
+                Password = "123456ABC",
+                PasswordConfirmation = "123456ABC",
+                UserName = "tokenUser"
             };
 
-            request.AddJsonBody(newUser);
+            request.AddJsonBody(User);
 
-            var response2 = restCliente.Execute<ValidatorResult>(request);
+            var response2 = RestCliente.Execute<ValidatorResult>(request);
             var errorData = response2.Data;
 
             //ErroKeyEnum.DuplicateKey is used to scape
@@ -133,13 +118,10 @@ namespace Tasks.Manager.Integration.Tests.Tests
         [TestCategory("Integration/User")]
         public void User_Cant_Be_Created_With_Same_Email()
         {
-            var restCliente = new RestClient(UrlApi);
-            restCliente.AddHandler("application/json", NewtonsoftJsonSerializer.Default);
-
             var request = new RestRequest("users", Method.POST);
             var newUser = new UserViewModelCreate
             {
-                Email = "first@teste.com",
+                Email = "token@token.com",
                 Password = "123456",
                 PasswordConfirmation = "123456",
                 UserName = "first"
@@ -147,10 +129,7 @@ namespace Tasks.Manager.Integration.Tests.Tests
 
             request.AddJsonBody(newUser);
 
-            //Creating one, to have error when create the second
-            restCliente.Execute<ValidatorResult>(request);
-
-            var response2 = restCliente.Execute<ValidatorResult>(request);
+            var response2 = RestCliente.Execute<ValidatorResult>(request);
             var errorData = response2.Data;
 
 
@@ -162,9 +141,6 @@ namespace Tasks.Manager.Integration.Tests.Tests
         [TestCategory("Integration/User")]
         public void User_Cant_Change_Password_Without_Authnetication()
         {
-            var restCliente = new RestClient(UrlApi);
-            restCliente.AddHandler("application/json", NewtonsoftJsonSerializer.Default);
-
             var request = new RestRequest("users/{userName}/ChangePassword", Method.PUT);
             request.AddUrlSegment("userName", "tokenUser");
 
@@ -177,7 +153,7 @@ namespace Tasks.Manager.Integration.Tests.Tests
 
             request.AddJsonBody(changePassword);
 
-            var response = restCliente.Execute(request);
+            var response = RestCliente.Execute(request);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.Unauthorized);
         }
@@ -186,22 +162,9 @@ namespace Tasks.Manager.Integration.Tests.Tests
         [TestCategory("Integration/User")]
         public void User_Can_Change_Password_With_Authentication()
         {
-            var restCliente = new RestClient(UrlApi);
-            restCliente.AddHandler("application/json", NewtonsoftJsonSerializer.Default);
-
-            var requestToken = new RestRequest("security/token", Method.POST);
-            requestToken.AddParameter("grant_type", "password");
-            requestToken.AddParameter("username", "token@token.com");
-            requestToken.AddParameter("password", "123456ABC");
-
-            var responseToken = restCliente.Execute<TokenResponse>(requestToken);
-
-            //Getting token
-            Assert.AreEqual(responseToken.StatusCode, HttpStatusCode.OK);
-
             var request = new RestRequest("users/{userName}/ChangePassword", Method.PUT);
             request.AddUrlSegment("userName", "tokenUser");
-            request.AddHeader("Authorization", "Bearer " + responseToken.Data.access_token);
+            request.AddHeader("Authorization", "Bearer " + Token.access_token);
 
             var changePassword = new UserChangePasswordViewModel
             {
@@ -212,7 +175,7 @@ namespace Tasks.Manager.Integration.Tests.Tests
 
             request.AddJsonBody(changePassword);
 
-            var response = restCliente.Execute(request);
+            var response = RestCliente.Execute(request);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
         }
@@ -221,22 +184,9 @@ namespace Tasks.Manager.Integration.Tests.Tests
         [TestCategory("Integration/User")]
         public void User_Cant_Change_Password_of_Another_User_With_Authentication()
         {
-            var restCliente = new RestClient(UrlApi);
-            restCliente.AddHandler("application/json", NewtonsoftJsonSerializer.Default);
-
-            var requestToken = new RestRequest("security/token", Method.POST);
-            requestToken.AddParameter("grant_type", "password");
-            requestToken.AddParameter("username", "token@token.com");
-            requestToken.AddParameter("password", "123456ABC");
-
-            var responseToken = restCliente.Execute<TokenResponse>(requestToken);
-
-            //Getting token
-            Assert.AreEqual(responseToken.StatusCode, HttpStatusCode.OK);
-
             var request = new RestRequest("users/{userName}/ChangePassword", Method.PUT);
             request.AddUrlSegment("userName", "first");
-            request.AddHeader("Authorization", "Bearer " + responseToken.Data.access_token);
+            request.AddHeader("Authorization", "Bearer " + Token.access_token);
 
             var changePassword = new UserChangePasswordViewModel
             {
@@ -247,7 +197,7 @@ namespace Tasks.Manager.Integration.Tests.Tests
 
             request.AddJsonBody(changePassword);
 
-            var response = restCliente.Execute(request);
+            var response = RestCliente.Execute(request);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.Unauthorized);
         }

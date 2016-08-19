@@ -38,15 +38,19 @@ namespace TasksManager.Infra.Data.Repositories
             return FirstOrDefault(i => i.UserName == userName && i.PasswordHash == password);
         }
 
-        public ValidatorResult ChangePassword(string userId, string passwordHash)
+        public ValidatorResult ChangePassword(string userId, string oldPasswordHash, string newPasswordHash)
         {
             var validation = new ValidatorResult();
 
             try
             {
-                var filter = Builders<TaskUser>.Filter.Eq(i => i.UserName, userId);
-                var update = Builders<TaskUser>.Update.Set(i => i.PasswordHash, passwordHash);
-                Context.MongoDatabase.GetCollection<TaskUser>(TableName).UpdateOne(filter, update);
+                var toUpdate = Builders<TaskUser>.Update.Set(i => i.PasswordHash, newPasswordHash);
+                var updated = Context.MongoDatabase.GetCollection<TaskUser>(TableName).UpdateOne(i => i.UserName == userId && i.PasswordHash == oldPasswordHash, toUpdate);
+
+                if (updated.MatchedCount == 0)
+                {
+                    validation.AddError(new ValidationError("Username or password is incorrect", ErroKeyEnum.NotFound));
+                }
             }
             catch (AggregateException aggEx)
             {

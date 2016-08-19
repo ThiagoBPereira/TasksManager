@@ -43,17 +43,7 @@ namespace TasksManager.Application.Apps
 
         public ValidatorResult ChangePassword(UserChangePasswordViewModel userViewModel)
         {
-            var mongoUser = _taskUserService.GetUserByUserNameAndPassword(userViewModel.UserName, userViewModel.OldPassword);
-
-            var validation = new ValidatorResult();
-
-            if (mongoUser == null)
-            {
-                validation.AddError(new ValidationError("Username or password is incorrect", ErroKeyEnum.NotFound));
-                return validation;
-            }
-
-            return _taskUserService.ChangePassword(userViewModel.UserName, userViewModel.NewPassword, userViewModel.NewPasswordConfirmation);
+            return _taskUserService.ChangePassword(userViewModel.UserName, userViewModel.OldPassword, userViewModel.NewPassword, userViewModel.NewPasswordConfirmation);
         }
     }
 }

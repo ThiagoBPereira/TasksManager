@@ -56,13 +56,20 @@ namespace TasksManager.Domain.Entities
 
         private void VerifyEmail()
         {
-            //Email have to be valid
-            var regex = new Regex(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$", RegexOptions.IgnoreCase);
-            var match = regex.Match(Email);
-
-            if (!match.Success)
+            if (!string.IsNullOrEmpty(Email))
             {
-                ValidatorResult.AddError(new ValidationError("Your email address is invalid. Please enter a valid address.", ErroKeyEnum.NotValid));
+                //Email have to be valid
+                var regex = new Regex(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$", RegexOptions.IgnoreCase);
+                var match = regex.Match(Email);
+
+                if (!match.Success)
+                {
+                    ValidatorResult.AddError(new ValidationError("Your email address is invalid. Please enter a valid address.", ErroKeyEnum.NotValid));
+                }
+            }
+            else
+            {
+                ValidatorResult.AddError(new ValidationError("Please enter a valid address.", ErroKeyEnum.EmptyError));
             }
         }
 

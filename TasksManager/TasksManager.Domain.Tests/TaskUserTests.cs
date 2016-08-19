@@ -42,7 +42,7 @@ namespace TasksManager.Domain.Tests
             };
 
             Assert.IsFalse(taskUser.IsValid());
-            Assert.IsNotNull(taskUser.ValidatorResult.Errors.FirstOrDefault(i => i.ErrorKey == ErroKeyEnum.NotValid));
+            Assert.IsNotNull(taskUser.ValidatorResult.Errors.FirstOrDefault(i => i.ErrorKey == ErroKeyEnum.EmptyError));
 
             taskUser.Email = "tteste";
 

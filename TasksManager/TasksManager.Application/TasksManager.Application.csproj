@@ -41,9 +41,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Apps\TaskApp.cs" />
     <Compile Include="Apps\UserApp.cs" />
+    <Compile Include="Interfaces\ITaskApp.cs" />
     <Compile Include="Interfaces\IUserApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\Request\UserNameAndTaskIdRequest.cs" />
+    <Compile Include="ViewModels\Task\TaskViewModel.cs" />
+    <Compile Include="ViewModels\Task\TaskViewModelIndex.cs" />
+    <Compile Include="ViewModels\Request\UserNameRequest.cs" />
     <Compile Include="ViewModels\User\UserChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\User\UserViewModel.cs" />
     <Compile Include="ViewModels\User\UserViewModelCreate.cs" />

@@ -55,11 +55,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Task.cs" />
     <Compile Include="Entities\TaskUser.cs" />
     <Compile Include="Interfaces\Repositories\IBaseRepository.cs" />
+    <Compile Include="Interfaces\Repositories\ITaskRepository.cs" />
     <Compile Include="Interfaces\Repositories\ITaskUserRepository.cs" />
+    <Compile Include="Interfaces\Services\ITaskService.cs" />
     <Compile Include="Interfaces\Services\ITaskUserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\TaskService.cs" />
     <Compile Include="Services\TaskUserService.cs" />
     <Compile Include="ValueObjects\PasswordHelper.cs" />
   </ItemGroup>

@@ -7,6 +7,6 @@ namespace TasksManager.Domain.Interfaces.Repositories
     {
         TaskUser GetUserByEmailAndPassword(string email, string password);
         TaskUser GetUserByUserNameAndPassword(string id, string password);
-        ValidatorResult ChangePassword(string userId, string passwordHash);
+        ValidatorResult ChangePassword(string userId, string oldPasswordHash, string passwordHash);
     }
 }
