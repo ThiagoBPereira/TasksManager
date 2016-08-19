@@ -97,5 +97,28 @@ namespace TasksManager.Api.Controllers
                 return InternalServerError(ex);
             }
         }
+
+        [HttpDelete]
+        [Route("api/Users/{username}/tasks/{taskId}")]
+        [AuthorizeRouteByClaim("userName", ClaimTypes.Name)]
+        public IHttpActionResult Delete([FromUri]UserNameAndTaskIdRequest userRequest)
+        {
+            try
+            {
+                var validation = _taskApp.Delete(userRequest.UserName, userRequest.TaskId);
+
+                if (validation.IsSuccess)
+                    return Ok();
+
+                if (validation.Errors.Any(i => i.ErrorKey == ErroKeyEnum.NotFound))
+                    return NotFound();
+
+                return Content(HttpStatusCode.BadRequest, validation);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
     }
 }

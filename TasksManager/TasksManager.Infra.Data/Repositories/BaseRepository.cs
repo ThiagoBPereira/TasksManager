@@ -59,10 +59,5 @@ namespace TasksManager.Infra.Data.Repositories
         {
             return Context.MongoDatabase.GetCollection<TEntity>(TableName).Find(query).FirstOrDefault();
         }
-
-        public IList<TEntity> GetAll()
-        {
-            return Context.MongoDatabase.GetCollection<TEntity>(TableName).AsQueryable().ToList();
-        }
     }
 }

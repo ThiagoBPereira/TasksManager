@@ -10,5 +10,6 @@ namespace TasksManager.Domain.Interfaces.Services
         ValidatorResult Create(Task task);
         Task GetByUserNameAndTaskId(string userName, string taskId);
         ValidatorResult Update(Task task);
+        ValidatorResult Delete(string userName, string taskId);
     }
 }

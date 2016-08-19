@@ -11,5 +11,6 @@ namespace TasksManager.Application.Interfaces
         IEnumerable<TaskViewModelIndex> Get(string username);
         TaskViewModelDetails Get(UserNameAndTaskIdRequest request);
         ValidatorResult Update(string username, string taskId, TaskViewModelDetails task);
+        ValidatorResult Delete(string userName, string taskId);
     }
 }

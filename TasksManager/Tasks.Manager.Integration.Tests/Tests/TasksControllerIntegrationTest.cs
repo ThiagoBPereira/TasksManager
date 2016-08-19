@@ -187,5 +187,52 @@ namespace Tasks.Manager.Integration.Tests.Tests
             Assert.AreEqual(response.StatusCode, HttpStatusCode.Unauthorized);
         }
 
+        [TestMethod]
+        [TestCategory("Integration/Tasks")]
+        public void User_Cant_Delete_Tasks_Without_Autentication()
+        {
+            var request = new RestRequest("users/{userName}/tasks/{taskId}", Method.DELETE);
+            request.AddUrlSegment("userName", User.UserName);
+
+            if (Tasks == null || !Tasks.Any())
+                Everyone_Can_Get_Someone_Tasks();
+
+            request.AddUrlSegment("taskId", Tasks?.FirstOrDefault()?.TaskId);
+
+            var response = RestCliente.Execute(request);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Unauthorized);
+        }
+
+        [TestMethod]
+        [TestCategory("Integration/Tasks")]
+        public void User_Cant_Delete_Another_User_Task()
+        {
+            var request = new RestRequest("users/{userName}/tasks/{taskId}", Method.DELETE);
+            request.AddUrlSegment("userName", "AnotherUser");
+            request.AddUrlSegment("taskId", "57b793aba2af1a24e03ff45f");
+
+            var response = RestCliente.Execute(request);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Unauthorized);
+        }
+
+        [TestMethod]
+        [TestCategory("Integration/Tasks")]
+        public void User_Can_Delete_Tasks()
+        {
+            var request = new RestRequest("users/{userName}/tasks/{taskId}", Method.DELETE);
+            request.AddUrlSegment("userName", User.UserName);
+            request.AddHeader("Authorization", "Bearer " + Token.access_token);
+
+            if (Tasks == null || !Tasks.Any())
+                Everyone_Can_Get_Someone_Tasks();
+
+            request.AddUrlSegment("taskId", Tasks?.FirstOrDefault()?.TaskId);
+
+            var response = RestCliente.Execute(request);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
     }
 }

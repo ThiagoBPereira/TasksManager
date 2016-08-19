@@ -10,6 +10,5 @@ namespace TasksManager.Domain.Interfaces.Repositories
         ValidatorResult CreateAsync(TEntity user);
         IList<TEntity> Where(Expression<Func<TEntity, bool>> query);
         TEntity FirstOrDefault(Expression<Func<TEntity, bool>> query);
-        IList<TEntity> GetAll();
     }
 }

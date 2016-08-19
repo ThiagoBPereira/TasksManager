@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using TasksManager.Domain.Entities;
@@ -61,6 +62,27 @@ namespace TasksManager.Infra.Data.Repositories
             }
             return validation;
 
+        }
+
+        public ValidatorResult Delete(Expression<Func<Task, bool>> query)
+        {
+            var validation = new ValidatorResult();
+
+            try
+            {
+                var updated = Context.MongoDatabase.GetCollection<Task>(TableName).DeleteOne(query);
+
+                if (updated.DeletedCount == 0)
+                {
+                    validation.AddError(new ValidationError("Task was not found", ErroKeyEnum.NotFound));
+                }
+            }
+            catch (Exception ex)
+            {
+                validation.AddError(new ValidationError(ex.Message, ErroKeyEnum.InternalError));
+            }
+
+            return validation;
         }
     }
 }

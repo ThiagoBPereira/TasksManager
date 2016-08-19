@@ -40,6 +40,11 @@ namespace TasksManager.Application.Apps
             });
         }
 
+        public ValidatorResult Delete(string userName, string taskId)
+        {
+            return _taskService.Delete(userName, taskId);
+        }
+
 
         public IEnumerable<TaskViewModelIndex> Get(string username)
         {
