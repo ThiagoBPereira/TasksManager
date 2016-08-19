@@ -111,5 +111,81 @@ namespace Tasks.Manager.Integration.Tests.Tests
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
         }
 
+        [TestMethod]
+        [TestCategory("Integration/Tasks")]
+        public void User_Can_Update_Tasks()
+        {
+            var request = new RestRequest("users/{userName}/tasks/{taskId}", Method.PUT);
+            request.AddUrlSegment("userName", User.UserName);
+            request.AddHeader("Authorization", "Bearer " + Token.access_token);
+
+            if (Tasks == null || !Tasks.Any())
+                Everyone_Can_Get_Someone_Tasks();
+
+            request.AddUrlSegment("taskId", Tasks?.FirstOrDefault()?.TaskId);
+
+            var task = new TaskViewModelDetails
+            {
+                Description = "It was modified",
+                Title = "Second teste",
+                IsCompleted = true
+            };
+
+            request.AddJsonBody(task);
+
+            var response = RestCliente.Execute(request);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+
+        [TestMethod]
+        [TestCategory("Integration/Tasks")]
+        public void User_Cant_Update_Tasks_Without_Autentication()
+        {
+            var request = new RestRequest("users/{userName}/tasks/{taskId}", Method.PUT);
+            request.AddUrlSegment("userName", User.UserName);
+
+            if (Tasks == null || !Tasks.Any())
+                Everyone_Can_Get_Someone_Tasks();
+
+            request.AddUrlSegment("taskId", Tasks?.FirstOrDefault()?.TaskId);
+
+            var task = new TaskViewModelDetails
+            {
+                Description = "It was modified",
+                Title = "Second teste",
+                IsCompleted = true
+            };
+
+            request.AddJsonBody(task);
+
+            var response = RestCliente.Execute(request);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Unauthorized);
+        }
+
+        [TestMethod]
+        [TestCategory("Integration/Tasks")]
+        public void User_Cant_Update_Another_User_Task()
+        {
+            var request = new RestRequest("users/{userName}/tasks/{taskId}", Method.PUT);
+            request.AddUrlSegment("userName", "AnotherUser");
+            request.AddUrlSegment("taskId", "57b793aba2af1a24e03ff45f");
+
+            var task = new TaskViewModelDetails
+            {
+                Description = "It was modified",
+                Title = "Second teste",
+                IsCompleted = true
+            };
+
+            request.AddJsonBody(task);
+
+            var response = RestCliente.Execute(request);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Unauthorized);
+        }
+
     }
 }

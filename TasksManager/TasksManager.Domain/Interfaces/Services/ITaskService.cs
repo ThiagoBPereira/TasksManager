@@ -6,8 +6,9 @@ namespace TasksManager.Domain.Interfaces.Services
 {
     public interface ITaskService
     {
-        IEnumerable<Entities.Task> GetByUserName(string username);
+        IEnumerable<Task> GetByUserName(string username);
         ValidatorResult Create(Task task);
-        Entities.Task GetByUserNameAndTaskId(string userName, string taskId);
+        Task GetByUserNameAndTaskId(string userName, string taskId);
+        ValidatorResult Update(Task task);
     }
 }

@@ -163,7 +163,7 @@ namespace Tasks.Manager.Integration.Tests.Tests
         public void User_Can_Change_Password_With_Authentication()
         {
             var request = new RestRequest("users/{userName}/ChangePassword", Method.PUT);
-            request.AddUrlSegment("userName", "tokenUser");
+            request.AddUrlSegment("userName", User.UserName);
             request.AddHeader("Authorization", "Bearer " + Token.access_token);
 
             var changePassword = new UserChangePasswordViewModel

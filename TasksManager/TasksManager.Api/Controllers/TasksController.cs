@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Web.Http;
@@ -6,6 +7,7 @@ using TasksManager.Api.Authorize;
 using TasksManager.Application.Interfaces;
 using TasksManager.Application.ViewModels.Request;
 using TasksManager.Application.ViewModels.Task;
+using TasksManager.Infra.Cc.Validators;
 
 namespace TasksManager.Api.Controllers
 {
@@ -66,6 +68,29 @@ namespace TasksManager.Api.Controllers
                     return Ok(task);
 
                 return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPut]
+        [Route("api/Users/{username}/tasks/{taskId}")]
+        [AuthorizeRouteByClaim("userName", ClaimTypes.Name)]
+        public IHttpActionResult Put([FromUri]UserNameAndTaskIdRequest userRequest, [FromBody]TaskViewModelDetails task)
+        {
+            try
+            {
+                var validation = _taskApp.Update(userRequest.UserName, userRequest.TaskId, task);
+
+                if (validation.IsSuccess)
+                    return Ok();
+
+                if (validation.Errors.Any(i => i.ErrorKey == ErroKeyEnum.NotFound))
+                    return NotFound();
+
+                return Content(HttpStatusCode.BadRequest, validation);
             }
             catch (Exception ex)
             {
