@@ -3,6 +3,7 @@ using AspNet.Identity.MongoDB;
 using MongoDB.Bson.Serialization.Attributes;
 using TasksManager.Domain.ValueObjects;
 using TasksManager.Infra.Cc.Validators;
+using TasksManager.Infra.IoC.Resources;
 
 namespace TasksManager.Domain.Entities
 {
@@ -42,15 +43,15 @@ namespace TasksManager.Domain.Entities
 
             if (string.IsNullOrEmpty(UserName))
             {
-                ValidatorResult.AddError(new ValidationError("Please enter your username", ErroKeyEnum.EmptyError));
+                ValidatorResult.AddError(new ValidationError(string.Format(Resources.PleaseEnterYour, Resources.Username), ErroKeyEnum.EmptyError));
             }
             else if (UserName.Length < 4)
             {
-                ValidatorResult.AddError(new ValidationError("To be valid your username have to contain at least 4 characters", ErroKeyEnum.SmallLenghtError));
+                ValidatorResult.AddError(new ValidationError(string.Format(Resources.ToBeValidYourHaveToContain, Resources.Username, "4"), ErroKeyEnum.SmallLenghtError));
             }
             else if (regex.Match(Email).Success)
             {
-                ValidatorResult.AddError(new ValidationError("To be valid your username have to contain only letters and numbers", ErroKeyEnum.NotValid));
+                ValidatorResult.AddError(new ValidationError(string.Format(Resources.ToBeValidYourHaveToContainOnly, Resources.Username, Resources.LettersAndNumbers), ErroKeyEnum.NotValid));
             }
         }
 
@@ -64,12 +65,12 @@ namespace TasksManager.Domain.Entities
 
                 if (!match.Success)
                 {
-                    ValidatorResult.AddError(new ValidationError("Your email address is invalid. Please enter a valid address.", ErroKeyEnum.NotValid));
+                    ValidatorResult.AddError(new ValidationError(string.Format(Resources.PleaseEnterAValid, Resources.EmailAddress), ErroKeyEnum.NotValid));
                 }
             }
             else
             {
-                ValidatorResult.AddError(new ValidationError("Please enter a valid address.", ErroKeyEnum.EmptyError));
+                ValidatorResult.AddError(new ValidationError(string.Format(Resources.PleaseEnterYour, Resources.EmailAddress), ErroKeyEnum.EmptyError));
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using TasksManager.Infra.Cc.Validators;
+using TasksManager.Infra.IoC.Resources;
 
 namespace TasksManager.Domain.Entities
 {
@@ -36,7 +37,7 @@ namespace TasksManager.Domain.Entities
         {
             if (string.IsNullOrEmpty(Title.Trim()))
             {
-                ValidatorResult.AddError(new ValidationError("Title can't be empty", ErroKeyEnum.EmptyError));
+                ValidatorResult.AddError(new ValidationError(string.Format(Resources.PleaseEnterAValid, Resources.Title), ErroKeyEnum.EmptyError));
             }
         }
     }

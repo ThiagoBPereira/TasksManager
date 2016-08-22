@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using System.Configuration;
+using MongoDB.Driver;
 
 namespace TasksManager.Infra.Data.Context
 {
@@ -10,8 +11,8 @@ namespace TasksManager.Infra.Data.Context
 
         public MongoDbContext()
         {
-            MongoClient = new MongoClient("mongodb://localhost:27017");
-            MongoDatabase = MongoClient.GetDatabase("mytasks");
+            MongoClient = new MongoClient(ConfigurationManager.AppSettings["ConnectionString"]);
+            MongoDatabase = MongoClient.GetDatabase(ConfigurationManager.AppSettings["Database"]);
         }
     }
 }
