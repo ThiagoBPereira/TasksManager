@@ -6,6 +6,7 @@ using TasksManager.Domain.Entities;
 using TasksManager.Domain.Interfaces.Repositories;
 using TasksManager.Infra.Cc.Validators;
 using TasksManager.Infra.Data.Context;
+using TasksManager.Infra.IoC.Resources;
 
 namespace TasksManager.Infra.Data.Repositories
 {
@@ -32,11 +33,11 @@ namespace TasksManager.Infra.Data.Repositories
                     .Set(i => i.Description, task.Description)
                     .Set(i => i.IsCompleted, task.IsCompleted);
 
-                var updated = Context.MongoDatabase.GetCollection<Task>(TableName).UpdateOne(i => i.UserName == task.UserName && i.Id == task.Id, toUpdate);
+                var updated = DbCollection.UpdateOne(i => i.UserName == task.UserName && i.Id == task.Id, toUpdate);
 
                 if (updated.MatchedCount == 0)
                 {
-                    validation.AddError(new ValidationError("Task was not found", ErroKeyEnum.NotFound));
+                    validation.AddError(new ValidationError(string.Format(Resources.FieldWasNotFound, Resources.Task), ErroKeyEnum.NotFound));
                 }
             }
             catch (AggregateException aggEx)
@@ -50,7 +51,7 @@ namespace TasksManager.Infra.Data.Repositories
                         return true;
                     }
 
-                    validation.AddError(new ValidationError("Unknown error", ErroKeyEnum.InternalError));
+                    validation.AddError(new ValidationError(Resources.UnknownError, ErroKeyEnum.InternalError));
                     return false;
                 });
 
@@ -70,11 +71,11 @@ namespace TasksManager.Infra.Data.Repositories
 
             try
             {
-                var updated = Context.MongoDatabase.GetCollection<Task>(TableName).DeleteOne(query);
+                var updated = DbCollection.DeleteOne(query);
 
                 if (updated.DeletedCount == 0)
                 {
-                    validation.AddError(new ValidationError("Task was not found", ErroKeyEnum.NotFound));
+                    validation.AddError(new ValidationError(string.Format(Resources.FieldWasNotFound, Resources.Task), ErroKeyEnum.NotFound));
                 }
             }
             catch (Exception ex)

@@ -5,6 +5,7 @@ using MongoDB.Driver;
 using TasksManager.Domain.Interfaces.Repositories;
 using TasksManager.Infra.Cc.Validators;
 using TasksManager.Infra.Data.Context;
+using TasksManager.Infra.IoC.Resources;
 
 namespace TasksManager.Infra.Data.Repositories
 {
@@ -12,6 +13,8 @@ namespace TasksManager.Infra.Data.Repositories
     {
         protected readonly MongoDbContext Context;
         protected string TableName;
+        protected IMongoCollection<TEntity> DbCollection => Context.MongoDatabase.GetCollection<TEntity>(TableName);
+
 
         public BaseRepository(MongoDbContext context)
         {
@@ -23,7 +26,7 @@ namespace TasksManager.Infra.Data.Repositories
             var validationResult = new ValidatorResult();
             try
             {
-                Context.MongoDatabase.GetCollection<TEntity>(TableName).InsertOneAsync(user).Wait();
+                DbCollection.InsertOneAsync(user).Wait();
             }
             catch (AggregateException aggEx)
             {
@@ -37,7 +40,7 @@ namespace TasksManager.Infra.Data.Repositories
                         return true;
                     }
 
-                    validationResult.AddError(new ValidationError("Unknown error", ErroKeyEnum.InternalError));
+                    validationResult.AddError(new ValidationError(Resources.UnknownError, ErroKeyEnum.InternalError));
                     return false;
                 });
 
@@ -52,12 +55,12 @@ namespace TasksManager.Infra.Data.Repositories
 
         public IList<TEntity> Where(Expression<Func<TEntity, bool>> query)
         {
-            return Context.MongoDatabase.GetCollection<TEntity>(TableName).Find(query).ToList();
+            return DbCollection.Find(query).ToList();
         }
 
         public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> query)
         {
-            return Context.MongoDatabase.GetCollection<TEntity>(TableName).Find(query).FirstOrDefault();
+            return DbCollection.Find(query).FirstOrDefault();
         }
     }
 }

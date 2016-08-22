@@ -2,6 +2,8 @@
 using System.Web.Http;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.OAuth;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Owin;
 using SimpleInjector.Integration.WebApi;
 using TasksManager.Api.Authorize;
@@ -17,6 +19,7 @@ namespace TasksManager.Api
             var config = new HttpConfiguration();
 
             ConfigureWebApi(config);
+            ResponseFormat(config);
 
             //Getting container
             var container = new SimpleContainer().Initialize();
@@ -58,5 +61,18 @@ namespace TasksManager.Api
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
         }
 
+        public static void ResponseFormat(HttpConfiguration config)
+        {
+            var formatters = config.Formatters;
+            
+            //Removing XML
+            formatters.Remove(formatters.XmlFormatter);
+
+            var json = config.Formatters.JsonFormatter;
+            json.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            json.SerializerSettings.Formatting = Formatting.Indented;
+            json.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+            json.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+        }
     }
 }

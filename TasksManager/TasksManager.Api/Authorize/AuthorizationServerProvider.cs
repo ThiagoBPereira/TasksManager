@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Owin.Security.OAuth;
 using TasksManager.Application.Interfaces;
+using TasksManager.Infra.IoC.Resources;
 
 namespace TasksManager.Api.Authorize
 {
@@ -30,7 +31,7 @@ namespace TasksManager.Api.Authorize
 
                 if (user == null)
                 {
-                    context.SetError("invalid_grant", "Usuário ou senha inválidos");
+                    context.SetError("invalid_grant", string.Format(Resources.IsIncorrect, Resources.UsernameOrPassword));
                     return;
                 }
 
@@ -48,7 +49,7 @@ namespace TasksManager.Api.Authorize
             }
             catch
             {
-                context.SetError("invalid_grant", "Falha ao autenticar");
+                context.SetError("invalid_grant", Resources.FailedToAuthenticate);
             }
         }
     }

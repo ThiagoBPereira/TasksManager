@@ -6,6 +6,7 @@ using TasksManager.Domain.Entities;
 using TasksManager.Domain.Interfaces.Repositories;
 using TasksManager.Infra.Cc.Validators;
 using TasksManager.Infra.Data.Context;
+using TasksManager.Infra.IoC.Resources;
 
 namespace TasksManager.Infra.Data.Repositories
 {
@@ -24,8 +25,8 @@ namespace TasksManager.Infra.Data.Repositories
 
         private void CreatingIndex()
         {
-            Context.MongoDatabase.GetCollection<TaskUser>(TableName).Indexes.CreateOne(new BsonDocument("Email", 1), new CreateIndexOptions { Unique = true, Sparse = true });
-            Context.MongoDatabase.GetCollection<TaskUser>(TableName).Indexes.CreateOne(new BsonDocument("UserName", 1), new CreateIndexOptions { Unique = true, Sparse = true });
+            DbCollection.Indexes.CreateOne(new BsonDocument("Email", 1), new CreateIndexOptions { Unique = true, Sparse = true });
+            DbCollection.Indexes.CreateOne(new BsonDocument("UserName", 1), new CreateIndexOptions { Unique = true, Sparse = true });
         }
 
         public TaskUser GetUserByEmailAndPassword(string email, string password)
@@ -45,11 +46,11 @@ namespace TasksManager.Infra.Data.Repositories
             try
             {
                 var toUpdate = Builders<TaskUser>.Update.Set(i => i.PasswordHash, newPasswordHash);
-                var updated = Context.MongoDatabase.GetCollection<TaskUser>(TableName).UpdateOne(i => i.UserName == userId && i.PasswordHash == oldPasswordHash, toUpdate);
+                var updated = DbCollection.UpdateOne(i => i.UserName == userId && i.PasswordHash == oldPasswordHash, toUpdate);
 
                 if (updated.MatchedCount == 0)
                 {
-                    validation.AddError(new ValidationError("Username or password is incorrect", ErroKeyEnum.NotFound));
+                    validation.AddError(new ValidationError(string.Format(Resources.IsIncorrect, Resources.UsernameOrPassword), ErroKeyEnum.NotFound));
                 }
             }
             catch (AggregateException aggEx)
@@ -64,7 +65,7 @@ namespace TasksManager.Infra.Data.Repositories
                         return true;
                     }
 
-                    validation.AddError(new ValidationError("Unknown error", ErroKeyEnum.InternalError));
+                    validation.AddError(new ValidationError(Resources.UnknownError, ErroKeyEnum.InternalError));
                     return false;
                 });
 

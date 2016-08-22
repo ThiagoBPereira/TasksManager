@@ -163,6 +163,10 @@
       <Project>{73EFEEFB-B063-4244-91C6-53AE16BB491F}</Project>
       <Name>TasksManager.Infra.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TasksManager.Infra.IoC.Resources\TasksManager.Infra.IoC.Resources.csproj">
+      <Project>{7608B60C-87D8-409B-9D04-50CB4A7DDD47}</Project>
+      <Name>TasksManager.Infra.IoC.Resources</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
