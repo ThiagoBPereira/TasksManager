@@ -20,14 +20,15 @@ namespace TasksManager.Infra.Data.Repositories
                 return;
 
             BsonClassMap.RegisterClassMap<TaskUser>();
-            //CreatingIndex();
+            CreatingIndex();
         }
 
-        //private void CreatingIndex()
-        //{
-        //    DbCollection.Indexes.CreateOne(new BsonDocument("Email", 1), new CreateIndexOptions { Unique = true, Sparse = true });
-        //    DbCollection.Indexes.CreateOne(new BsonDocument("UserName", 1), new CreateIndexOptions { Unique = true, Sparse = true });
-        //}
+        private void CreatingIndex()
+        {
+            //TODO must be transfered to a migration class
+            DbCollection.Indexes.CreateOne(new BsonDocument("Email", 1), new CreateIndexOptions { Unique = true, Sparse = true });
+            DbCollection.Indexes.CreateOne(new BsonDocument("UserName", 1), new CreateIndexOptions { Unique = true, Sparse = true });
+        }
 
         public TaskUser GetUserByEmailAndPassword(string email, string password)
         {
