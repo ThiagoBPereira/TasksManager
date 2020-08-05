@@ -1,5 +1,5 @@
 ﻿using SimpleInjector;
-using SimpleInjector.Integration.WebApi;
+using SimpleInjector.Lifestyles;
 using TasksManager.Application.Apps;
 using TasksManager.Application.Interfaces;
 using TasksManager.Domain.Interfaces.Repositories;
@@ -16,7 +16,7 @@ namespace TasksManager.Infra.Cc.IoC
         {
             var container = new Container();
 
-            var scopedLifestyle = new WebApiRequestLifestyle();
+            var scopedLifestyle = new AsyncScopedLifestyle();
             container.Options.DefaultScopedLifestyle = scopedLifestyle;
 
             //Context

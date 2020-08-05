@@ -11,8 +11,16 @@ namespace TasksManager.Infra.Data.Context
 
         public MongoDbContext()
         {
-            MongoClient = new MongoClient(ConfigurationManager.AppSettings["ConnectionString"]);
-            MongoDatabase = MongoClient.GetDatabase(ConfigurationManager.AppSettings["Database"]);
+            var mongoUrl = new MongoUrl(GetConnectionString("MongoDBConnectionString"));
+            var settings = MongoClientSettings.FromUrl(mongoUrl);
+
+            MongoClient = new MongoClient(settings);
+            MongoDatabase = MongoClient.GetDatabase(mongoUrl.DatabaseName);
+        }
+
+        private static string GetConnectionString(string connectionString)
+        {
+            return ConfigurationManager.ConnectionStrings[connectionString].ConnectionString;
         }
     }
 }
